@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Market Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    .chart {
+      width: 400px;
+      height: 300px;
+    }
+    
+    .container .inner{
+        background-color: red;
+    }
+    .container{
+        background-color: blue;
+    }
+  </style>
+</head>
+<body>
+    <div class ="container">
+        <div class ="inner">jrgerihgbrehbhbvr</div>
+    </div>
+  <h1>Stock Market Analysis</h1>
+  <div>
+    <label for="stockSelect">Select a Stock:</label>
+    <select id="stockSelect"></select>
+    <button onclick="addStock()">Add Stock</button>
+  </div>
+  <div id="portfolio">
+    <h2>Portfolio</h2>
+    <ul id="stockList"></ul>
+  </div>
+  <div id="chartContainer"></div>
+
+  <script>
+    // Stock object to store stock data
+    class Stock {
+      constructor(symbol, prices) {
+        this.symbol = symbol;
+        this.prices = prices;
+      }
+    }
+
+    // Predefined dataset of stocks
+    const stockData = [
+      { symbol: 'AAPL', prices: [145.11, 147.36, 148.15, 146.36, 144.98] },
+      { symbol: 'GOOGL', prices: [2539.99, 2560.56, 2556.13, 2525.67, 2558.22] },
+      { symbol: 'AMZN', prices: [3291.61, 3311.37, 3287.01, 3306.99, 3322.00] },
+      { symbol: 'MSFT', prices: [262.62, 261.70, 263.19, 263.18, 262.64] },
+      { symbol: 'FB', prices: [341.37, 342.99, 338.87, 341.20, 343.18] },
+    ];
+
+    // Function to populate the stock select dropdown
+    function populateStockSelect() {
+      const stockSelect = document.getElementById('stockSelect');
+
+      for (const stock of stockData) {
+        const option = document.createElement('option');
+        option.value = stock.symbol;
+        option.textContent = stock.symbol;
+        stockSelect.appendChild(option);
+      }
+    }
+
+    // Function to add a stock to the portfolio
+    function addStock() {
+      const stockSelect = document.getElementById('stockSelect');
+      const selectedSymbol = stockSelect.value;
+
+      const selectedStock = stockData.find(stock => stock.symbol === selectedSymbol);
+
+      if (selectedStock) {
+        const stock = new Stock(selectedStock.symbol, selectedStock.prices);
+        portfolio.push(stock);
+
+        // Display the stock in the portfolio list
+        const stockList = document.getElementById('stockList');
+        const listItem = document.createElement('li');
+        listItem.textContent = selectedSymbol;
+        stockList.appendChild(listItem);
+
+        // Generate and display chart for the added stock
+        generateChart(stock);
+      }
+    }
+
+    // Function to generate a chart for a stock
+    function generateChart(stock) {
+  const chartContainer = document.getElementById('chartContainer');
+  const canvas = document.createElement('canvas');
+  canvas.className = 'chart';
+  chartContainer.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array.from({ length: stock.prices.length }, (_, i) => `Day ${i + 1}`),
+      datasets: [
+        {
+          label: stock.symbol,
+          data: stock.prices,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0, 0, 255, 0.1)',
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    },
+  });
+}
+
+    // Array to store the portfolio of stocks
+    const portfolio = [];
+
+    // Populate the stock select dropdown on page load
+    populateStockSelect();
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  #canvasContainer {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  #controls {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  #controls button,
+  #controls input[type="range"] {
+    margin-right: 10px;
+  }
+  
+  #saveImage {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    /* display: */
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #saveImage:hover {
+    background-color: #45a049;
+  }

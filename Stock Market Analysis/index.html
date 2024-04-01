@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-Time Stock Market Analysis</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .stock-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .stock-card {
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      text-align: center;
+    }
+
+    .stock-symbol {
+      font-weight: bold;
+    }
+
+    .stock-price {
+      margin-top: 10px;
+    }
+
+    .stock-change {
+      margin-top: 5px;
+    }
+
+    .stock-change.positive {
+      color: green;
+    }
+
+    .stock-change.negative {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Real-Time Stock Market Analysis</h1>
+
+  <div class="stock-container" id="stockContainer"></div>
+
+  <script>
+    // Function to fetch stock data from an API
+    async function fetchStockData(symbol) {
+      try {
+        const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching stock data:', error);
+        return null;
+      }
+    }
+
+    // Function to render stock card with data
+    function renderStockCard(stockData) {
+      const stockContainer = document.getElementById('stockContainer');
+
+      const card = document.createElement('div');
+      card.classList.add('stock-card');
+
+      const symbol = document.createElement('div');
+      symbol.classList.add('stock-symbol');
+      symbol.textContent = stockData.symbol;
+      card.appendChild(symbol);
+
+      const price = document.createElement('div');
+      price.classList.add('stock-price');
+      price.textContent = `Price: ${stockData.price}`;
+      card.appendChild(price);
+
+      const change = document.createElement('div');
+      change.classList.add('stock-change');
+      change.textContent = `Change: ${stockData.change}`;
+      if (stockData.change > 0) {
+        change.classList.add('positive');
+      } else if (stockData.change < 0) {
+        change.classList.add('negative');
+      }
+      card.appendChild(change);
+
+      stockContainer.appendChild(card);
+    }
+
+    // Function to update stock data
+    async function updateStockData() {
+      const stockSymbols = ['AAPL', 'GOOGL', 'AMZN', 'MSFT'];
+
+      for (const symbol of stockSymbols) {
+        const stockData = await fetchStockData(symbol);
+        if (stockData) {
+          renderStockCard(stockData);
+        }
+      }
+    }
+
+    // Update stock data every 5 seconds
+    setInterval(updateStockData, 5000);
+
+    // Initial update
+    updateStockData();
+  </script>
+</body>
+</html>

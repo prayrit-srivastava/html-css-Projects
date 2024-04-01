@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Drawing Tool</title>
+  <style>
+    #canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <br>
+  <button onclick="changeBrushSize()">Change Brush Size</button>
+  <input type="color" id="colorPicker" onchange="changeColor()">
+  <button onclick="clearCanvas()">Clear Canvas</button>
+  <button onclick="saveImage()">Save Image</button>
+  <script src="index.js"></script>
+</body>
+</html>

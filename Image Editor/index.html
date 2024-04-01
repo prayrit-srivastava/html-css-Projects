@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Editor</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <input type="file" id="fileInput">
+  <div id="canvasContainer">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div id="controls">
+    <button id="applyFilter">Apply Filter</button>
+    <input type="range" id="brightness" min="-100" max="100" value="0">
+    <input type="range" id="contrast" min="-100" max="100" value="0">
+    <button id="saveImage">Save Image</button>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

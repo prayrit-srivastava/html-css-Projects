@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Editor</title>
+  <style>
+    /* CSS styles for the image editor */
+    .editor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .editor input[type="file"] {
+      margin-bottom: 10px;
+    }
+    .editor canvas {
+      border: 1px solid #ccc;
+      max-width: 500px;
+    }
+    .editor .filter-selection {
+      margin-top: 10px;
+    }
+    .editor .filter-slider {
+      width: 200px;
+    }
+    .editor .crop-selection {
+      margin-top: 10px;
+    }
+    .editor .rotate-selection {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor">
+    <input type="file" id="fileInput" accept="image/*" />
+    <canvas id="canvas"></canvas>
+    <div class="filter-selection">
+      <label for="filterSelect">Select Filter:</label>
+      <select id="filterSelect" onchange="applySelectedFilter()">
+        <option value="">None</option>
+        <option value="brightness">Brightness</option>
+        <option value="contrast">Contrast</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="invert">Invert</option>
+      </select>
+      <input type="range" id="filterSlider" min="0" max="100" step="1" value="50" class="filter-slider" onchange="applySelectedFilter()">
+    </div>
+    <div class="crop-selection">
+      <button onclick="cropImage()">Crop Image</button>
+    </div>
+    <div class="rotate-selection">
+      <button onclick="rotateImage()">Rotate Image</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript code for the image editor
+    const fileInput = document.getElementById('fileInput');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let image = new Image();
+    let imageData; // Global variable to store the original image data
+
+    // Load image from file input
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        image.onload = () => {
+          canvas.width = image.width;
+          canvas.height = image.height;
+          context.drawImage(image, 0, 0);
+          imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        };
+        image.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    // Apply the selected filter with the specified intensity
+    function applySelectedFilter() {
+      const filterSelect = document.getElementById('filterSelect');
+      const selectedFilter = filterSelect.value;
+      const filterSlider = document.getElementById('filterSlider');
+      const intensity = parseInt(filterSlider.value, 10);
+
+      if (selectedFilter === 'brightness') {
+        applyBrightnessFilter(intensity);
+      } else if (selectedFilter === 'contrast') {
+        applyContrastFilter(intensity);
+      } else if (selectedFilter === 'grayscale') {
+        applyGrayscaleFilter();
+      } else if (selectedFilter === 'invert') {
+        applyInvertFilter();
+      } else {
+        // No filter selected, reset the image
+        resetImage();
+      }
+    }
+
+    // Apply the brightness filter to the image with the specified intensity
+    function applyBrightnessFilter(intensity) {
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] += intensity; // R
+        data[i + 1] += intensity; // G
+        data[i + 2] += intensity; // B
+      }
+
+      context.putImageData(imageData, 0, 0);
+    }
+
+    // Apply the contrast filter to the image with the specified intensity
+    function applyContrastFilter(intensity) {
+      const factor = (259 * (intensity + 255)) / (255 * (259 - intensity));
+
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = factor * (data[i] - 128) + 128; // R
+        data[i + 1] = factor * (data[i + 1] - 128) + 128; // G
+        data[i + 2] = factor * (data[i + 2] - 128) + 128; // B
+      }
+
+      context.putImageData(imageData, 0, 0);
+    }
+
+    // Apply the grayscale filter to the image
+    function applyGrayscaleFilter() {
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = avg; // R
+        data[i + 1] = avg; // G
+        data[i + 2] = avg; // B
+      }
+
+      context.putImageData(imageData, 0, 0);
+    }
+
+    // Apply the invert filter to the image
+    function applyInvertFilter() {
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = 255 - data[i]; // R
+        data[i + 1] = 255 - data[i + 1]; // G
+        data[i + 2] = 255 - data[i + 2]; // B
+      }
+
+      context.putImageData(imageData, 0, 0);
+    }
+
+    // Reset the image to the original state
+    function resetImage() {
+      context.drawImage(image, 0, 0);
+      imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    // Function to crop the image
+    function cropImage() {
+      // Implement the crop functionality here
+    }
+
+    // Function to rotate the image
+    function rotateImage() {
+      // Implement the rotate functionality here
+    }
+  </script>
+</body>
+</html>
